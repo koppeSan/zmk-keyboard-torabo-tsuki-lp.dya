@@ -93,6 +93,46 @@
         status = "disabled";
     };
 
+    custom_aml: custom_aml {
+        compatible = "zmk,input-processor-temp-layer";
+        #input-processor-cells = <2>;
+        require-prior-idle-ms = <200>;
+    };
+
+    trackball_listener {
+        compatible = "zmk,input-listener";
+        device = <&trackball>;
+
+
+        scroller {
+        /* 横スクロールモード (レイヤー8) */
+            layers = <8>;
+            input-processors = <
+                &zip_y_scaler 0 1   // y方向の動きを0倍にして消す
+                &zip_xy_to_scroll_mapper
+                &zip_scroll_scaler 1 10   //スクロールの移動量を1/10にする
+                &zip_scroll_transform INPUT_TRANSFORM_X_INVERT
+            >;
+        /* 縦スクロールモード (レイヤー7) */
+            layers = <7>;
+            input-processors = <
+                &zip_x_scaler 0 1   // x方向の動きを0倍にして消す
+                &zip_xy_to_scroll_mapper
+                &zip_scroll_scaler 1 10   //スクロールの移動量を1/10にする
+                &zip_scroll_transform INPUT_TRANSFORM_Y_INVERT
+            >;
+        };
+        /* 通常モード (レイヤー0) */
+        default_mode {
+            layers = <0>;
+            input-processors = <
+                // &zip_xy_to_scroll_mapper //テスト用こーど
+                &zip_xy_transform (INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)
+                &custom_aml 1 500
+            >;
+        };
+    };
+
     vbatt: vbatt {
         // Disable default battery monitoring
         status = "disabled";
