@@ -2,6 +2,7 @@
 #include <dt-bindings/zmk/matrix_transform.h>
 #include <behaviors/battery_history_request.dtsi>
 #include "torabo_tsuki_lp_layouts.dtsi"
+#include <dt-bindings/zmk/input_transform.h>
 
 / {
     chosen {
